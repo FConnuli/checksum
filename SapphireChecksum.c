@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include <stdint.h>
 
@@ -25,20 +26,27 @@ uint16_t compound_card_crc(const char * data, uint16_t len)
 int main(void)
 {
 	int c;
-	char in[1000];
-        uint16_t i;
-	for (i = 0; i < 1000; i++)
+	char* in;
+    uint16_t i = 0;
+	in = (char *) malloc(1);
+	while (c = getchar() != EOF)
+	{
+		in[i++] = c;
+		in = (char *) realloc(in, 1 + i);
+	}
+	/*for (i = 0; i < 1000; i++)
 	{
 		c = getchar();
-		/*printf("%X  %d \n", c, i);*/
+		printf("%X  %X \n", c, i);
 		assert(c != EOF);
 		in[i] = c;
-	}
+	}*/
 	/*fread(in, 1, 1000, stdin);*/
     /*for (uint16_t i = 0; i < 1000; i++)
 	{
 		printf("%X  %d \n", in[i], i);
 	}*/
-	printf("%X\n", compound_card_crc(in, 1000));
+	printf("Checksum: %X\nBytes Read: %d", compound_card_crc(in, i), i);
+	free(in);
 	return 0;
 }
